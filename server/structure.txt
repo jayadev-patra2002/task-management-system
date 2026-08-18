@@ -1,0 +1,32 @@
+Folder PATH listing for volume New Volume
+Volume serial number is 0000029C EE28:92E8
+D:\TASK-MANAGEMENT-SYSTEM\SERVER\SRC
+|   app.module.ts
+|   main.ts
+|   
++---auth
+|   |   auth.controller.ts
+|   |   auth.module.ts
+|   |   auth.service.ts
+|   |   google-auth.guard.ts
+|   |   google.strategy.ts
+|   |   
+|   \---dto
+|           login.dto.ts
+|           
++---prisma
+|       prisma.module.ts
+|       prisma.service.ts
+|       
++---routes
+|       tasks.ts
+|       
+\---tasks
+    |   tasks.controller.ts
+    |   tasks.module.ts
+    |   tasks.service.ts
+    |   
+    \---dto
+            create-task.dto.ts
+            update-task.dto.ts
+            

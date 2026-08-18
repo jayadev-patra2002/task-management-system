@@ -1,0 +1,512 @@
+datasource db {
+ provider = "postgresql"
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// =====================================================
+// ENUMS
+// =====================================================
+
+enum TaskPermissionLevel {
+  VIEW
+  COMMENT
+  EDIT
+}
+
+// =====================================================
+// USER
+// =====================================================
+
+model User {
+  id       String  @id @default(uuid())
+  email    String  @unique
+  name     String?
+  avatar   String?
+  title    String?
+  username String?
+
+  // ---------------------------------------------------
+  // Team
+  // ---------------------------------------------------
+
+  teamId String?
+  team   Team?   @relation(fields: [teamId], references: [id], onDelete: SetNull)
+
+  // ---------------------------------------------------
+  // Tasks created by this user
+  // ---------------------------------------------------
+
+  tasks Task[]
+
+  // ---------------------------------------------------
+  // Comments created by this user
+  // ---------------------------------------------------
+
+  comments Comment[]
+
+  // ---------------------------------------------------
+  // Activity logs created by this user
+  // ---------------------------------------------------
+
+  activityLogs ActivityLog[]
+
+  // ---------------------------------------------------
+  // Task permissions given to this user
+  // ---------------------------------------------------
+
+  taskPermissions TaskPermission[]
+
+  // ---------------------------------------------------
+  // Comment reactions created by this user
+  // ---------------------------------------------------
+
+  commentReactions CommentReaction[]
+
+  // ---------------------------------------------------
+  // Task edit locks owned by this user
+  // ---------------------------------------------------
+
+  taskEditLocks TaskEditLock[]
+
+  // ---------------------------------------------------
+  // Resources (links/attachments) added by this user
+  // ---------------------------------------------------
+
+  resources Resource[]
+
+  // ---------------------------------------------------
+  // Timestamps
+  // ---------------------------------------------------
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// =====================================================
+// TEAM
+// =====================================================
+
+model Team {
+  id         String  @id @default(uuid())
+  name       String
+  inviteCode String  @unique @default(uuid())
+  ownerId    String?
+
+  // ---------------------------------------------------
+  // Team members
+  // ---------------------------------------------------
+
+  users User[]
+
+  // ---------------------------------------------------
+  // Team projects
+  // ---------------------------------------------------
+
+  projects Project[]
+
+  // ---------------------------------------------------
+  // Timestamps
+  // ---------------------------------------------------
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// =====================================================
+// PROJECT
+// =====================================================
+model Project {
+  id String @id @default(uuid())
+
+  name String
+
+  priority String @default("Medium")
+
+  status String @default("To Do")
+
+  // Project lead name or ID
+  lead String?
+
+  dueDate DateTime?
+
+  teamId String
+  team   Team   @relation(fields: [teamId], references: [id], onDelete: Cascade)
+
+  tasks Task[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+// =====================================================
+// TASK
+// =====================================================
+
+model Task {
+  id String @id @default(uuid())
+
+  // ---------------------------------------------------
+  // Basic information
+  // ---------------------------------------------------
+
+  title String
+
+  description String?
+
+  status String @default("To Do")
+
+  priority String @default("Medium")
+
+  // ---------------------------------------------------
+  // Assignment
+  // ---------------------------------------------------
+
+  assignee String?
+
+  reporter String?
+
+  avatarType String @default("text")
+
+  // ---------------------------------------------------
+  // Dates
+  // ---------------------------------------------------
+
+  startDate DateTime?
+
+  dueDate DateTime?
+
+  // ---------------------------------------------------
+  // Tags
+  //
+  // Stored as comma-separated string.
+  // Example:
+  // "frontend,urgent,design"
+  // ---------------------------------------------------
+
+  tags String?
+
+  // ---------------------------------------------------
+  // Parent task
+  //
+  // Can be used later for parent/child task
+  // relationships.
+  // ---------------------------------------------------
+
+  parentId String?
+
+  // ---------------------------------------------------
+  // Task creator
+  // ---------------------------------------------------
+
+  userId String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // ---------------------------------------------------
+  // Project
+  // ---------------------------------------------------
+
+  projectId String?
+
+  project Project? @relation(fields: [projectId], references: [id], onDelete: SetNull)
+
+  // ---------------------------------------------------
+  // Subtasks
+  // ---------------------------------------------------
+
+  subtasks Subtask[]
+
+  // ---------------------------------------------------
+  // Resources
+  //
+  // Links / documents attached to this task.
+  // ---------------------------------------------------
+
+  resources Resource[]
+
+  // ---------------------------------------------------
+  // Comments
+  // ---------------------------------------------------
+
+  comments Comment[]
+
+  // ---------------------------------------------------
+  // Activity logs
+  // ---------------------------------------------------
+
+  activityLogs ActivityLog[]
+
+  // ---------------------------------------------------
+  // Task permissions
+  // ---------------------------------------------------
+
+  permissions TaskPermission[]
+
+  // ---------------------------------------------------
+  // Current edit lock
+  //
+  // Only one active lock can exist for a task.
+  // ---------------------------------------------------
+
+  editLock TaskEditLock?
+
+  // ---------------------------------------------------
+  // Timestamps
+  // ---------------------------------------------------
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+}
+
+// =====================================================
+// SUBTASK
+// =====================================================
+
+model Subtask {
+  id String @id @default(uuid())
+
+  title String
+
+  priority String @default("Medium")
+
+  assignee String?
+
+  dueDate String?
+
+  completed Boolean @default(false)
+
+  // ---------------------------------------------------
+  // Parent task
+  // ---------------------------------------------------
+
+  taskId String
+
+  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+}
+
+// =====================================================
+// RESOURCE
+//
+// A link or document attached to a task.
+//
+// Example:
+// - Figma design link
+// - Google Doc
+// - External reference URL
+// =====================================================
+
+model Resource {
+  id        String   @id @default(uuid())
+  name      String
+  url       String
+  type      String   @default("link")
+  filePath  String?
+  mimeType  String?
+  fileSize  Int?
+  taskId    String
+  userId    String
+  createdAt DateTime @default(now())
+
+  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([taskId])
+  @@index([userId])
+}
+
+// =====================================================
+// COMMENT
+//
+// Supports:
+// - Normal comments
+// - Replies
+// - Nested replies
+// - Reactions
+// =====================================================
+
+model Comment {
+  id String @id @default(uuid())
+
+  content String
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  taskId String
+  task   Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  parentId String?
+  parent   Comment? @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+
+  replies Comment[] @relation("CommentReplies")
+
+  reactions CommentReaction[]
+
+  activityLogs ActivityLog[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// =====================================================
+// COMMENT REACTION
+//
+// Examples:
+// - 👍
+// - ❤️
+// - 😂
+// - 🎉
+// - 👀
+// =====================================================
+
+model CommentReaction {
+  id String @id @default(uuid())
+
+  // ---------------------------------------------------
+  // Reaction type
+  // ---------------------------------------------------
+
+  type String
+
+  // ---------------------------------------------------
+  // User
+  // ---------------------------------------------------
+
+  userId String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // ---------------------------------------------------
+  // Comment
+  // ---------------------------------------------------
+
+  commentId String
+
+  comment Comment @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  // ---------------------------------------------------
+  // Timestamp
+  // ---------------------------------------------------
+
+  createdAt DateTime @default(now())
+
+  // ---------------------------------------------------
+  // Prevent duplicate reaction
+  //
+  // Same user cannot add the same reaction type
+  // to the same comment more than once.
+  // ---------------------------------------------------
+
+  @@unique([commentId, userId, type])
+}
+
+// =====================================================
+// TASK PERMISSION
+//
+// Controls what a specific user can do with a task.
+//
+// VIEW
+// COMMENT
+// EDIT
+// =====================================================
+
+model TaskPermission {
+  id String @id @default(uuid())
+
+  // ---------------------------------------------------
+  // Task
+  // ---------------------------------------------------
+
+  taskId String
+
+  task Task @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  // ---------------------------------------------------
+  // User receiving permission
+  // ---------------------------------------------------
+
+  userId String
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // ---------------------------------------------------
+  // Permission level
+  // ---------------------------------------------------
+
+  permission TaskPermissionLevel @default(VIEW)
+
+  // ---------------------------------------------------
+  // Timestamps
+  // ---------------------------------------------------
+
+  createdAt DateTime @default(now())
+
+  updatedAt DateTime @updatedAt
+
+  // ---------------------------------------------------
+  // One permission record per user per task
+  // ---------------------------------------------------
+
+  @@unique([taskId, userId])
+}
+
+// =====================================================
+// TASK EDIT LOCK
+//
+// Used when one user is actively editing a task.
+//
+// Example:
+//
+// User A starts editing:
+//
+// taskId    = task123
+// userId    = userA
+// lockedAt  = current time
+// expiresAt = future time
+//
+// Other users can see that the task is locked.
+// =====================================================
+
+model TaskEditLock {
+  id String @id @default(uuid())
+
+  taskId String @unique
+  task   Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  lockedAt DateTime @default(now())
+}
+
+// =====================================================
+// ACTIVITY LOG
+//
+// Examples:
+//
+// "changed priority from Medium to High"
+// "updated task title"
+// "added a comment"
+// "assigned task to Rahul"
+// "created a subtask"
+// "changed status from To Do to Done"
+// =====================================================
+model ActivityLog {
+  id String @id @default(uuid())
+
+  action String
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  taskId String
+  task   Task   @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  commentId String?
+  comment   Comment? @relation(fields: [commentId], references: [id], onDelete: Cascade)
+
+  createdAt DateTime @default(now())
+}
