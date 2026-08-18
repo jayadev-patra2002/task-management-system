@@ -722,8 +722,10 @@ const [activeDateField, setActiveDateField] =
         extTask.activityLogs,
       ),
     );
-
-  /* ===================================================
+  
+   const API_URL =
+  process.env.NEXT_PUBLIC_API_URL ||
+  "http://localhost:4000/api";  /* ===================================================
      CALLBACK REFS
   =================================================== */
 
@@ -1833,13 +1835,11 @@ useEffect(() => {
             );
           }
 
-          const apiUrl =
-            process.env.NEXT_PUBLIC_API_URL ||
-            "http://localhost:4000/api";
+        
 
           const response =
             await fetch(
-              `${apiUrl}/tasks/${encodeURIComponent(
+              `${API_URL}/tasks/${encodeURIComponent(
                 String(task.id),
               )}`,
               {
@@ -2284,7 +2284,7 @@ useEffect(() => {
       try {
         const response =
           await fetch(
-            `http://localhost:4000/api/tasks/${task.id}/comments/${selectedComment.id}/replies`,
+            `${API_URL}/tasks/${task.id}/comments/${selectedComment.id}/replies`,
             {
               method: "POST",
 
@@ -2374,7 +2374,7 @@ useEffect(() => {
       try {
         const response =
           await fetch(
-            `http://localhost:4000/api/tasks/${task.id}/comments`,
+            `${API_URL}/tasks/${task.id}/comments`,
             {
               method: "POST",
 
@@ -2565,8 +2565,8 @@ useEffect(() => {
     try {
       const response = await fetch(
         isEdit
-          ? `http://localhost:4000/api/tasks/${task.id}/subtasks/${subtaskId}`
-          : `http://localhost:4000/api/tasks/${task.id}/subtasks`,
+          ? `${API_URL}/tasks/${task.id}/subtasks/${subtaskId}`
+          : `${API_URL}/tasks/${task.id}/subtasks`,
         {
           method: isEdit ? "PUT" : "POST",
           headers: {
@@ -2680,7 +2680,7 @@ useEffect(() => {
 
     try {
       const response = await fetch(
-        `http://localhost:4000/api/tasks/${task.id}/subtasks/${subtaskId}`,
+        `${API_URL}/tasks/${task.id}/subtasks/${subtaskId}`,
         {
           method: "PUT",
           headers: {
@@ -2736,7 +2736,7 @@ useEffect(() => {
 
     try {
       const response = await fetch(
-        `http://localhost:4000/api/tasks/${task.id}/subtasks/${subtaskId}`,
+        `${API_URL}/tasks/${task.id}/subtasks/${subtaskId}`,
         {
           method: "DELETE",
           headers: {
@@ -2813,7 +2813,7 @@ useEffect(() => {
       try {
         const response =
           await fetch(
-            `http://localhost:4000/api/tasks/${task.id}/resources`,
+            `${API_URL}/tasks/${task.id}/resources`,
             {
               method: "POST",
 
@@ -2888,7 +2888,7 @@ useEffect(() => {
       try {
         const response =
           await fetch(
-            `http://localhost:4000/api/tasks/${task.id}/resources/${resourceId}`,
+            `${API_URL}/tasks/${task.id}/resources/${resourceId}`,
             {
               method: "DELETE",
 
@@ -2980,7 +2980,7 @@ useEffect(() => {
         activeUserId,
       )}`;
 
-    return `http://localhost:4000/api/tasks/${task.id}/resources/${resource.id}/file?${query}${
+    return `${API_URL}/tasks/${task.id}/resources/${resource.id}/file?${query}${
       download
         ? "&download=true"
         : ""
@@ -3026,7 +3026,7 @@ useEffect(() => {
 
         const response =
           await fetch(
-            `http://localhost:4000/api/tasks/${task.id}/resources/upload`,
+            `${API_URL}/tasks/${task.id}/resources/upload`,
             {
               method: "POST",
               body: formData,
@@ -3122,7 +3122,7 @@ useEffect(() => {
 
         const response =
           await fetch(
-            `http://localhost:4000/api/tasks/${task.id}/resources/upload-many`,
+            `${API_URL}/tasks/${task.id}/resources/upload-many`,
             {
               method: "POST",
               body: formData,
@@ -3294,7 +3294,7 @@ useEffect(() => {
 
         const response =
           await fetch(
-            `http://localhost:4000/api/tasks/${task.id}/resources/${editingResourceId}`,
+            `${API_URL}/tasks/${task.id}/resources/${editingResourceId}`,
             {
               method: "PUT",
               headers: {

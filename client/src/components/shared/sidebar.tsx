@@ -63,12 +63,14 @@ export default function Sidebar() {
 
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
   const [loadingMembers, setLoadingMembers] = useState(false);
-
+  const API_URL =
+  process.env.NEXT_PUBLIC_API_URL ||
+  "http://localhost:4000/api";
   const fetchTeamMembers = async () => {
     setLoadingMembers(true);
     try {
       const token = localStorage.getItem("authToken");
-      const response = await fetch("http://localhost:4000/api/auth/team/members", {
+      const response = await fetch(`${API_URL}/auth/team/members`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -169,7 +171,7 @@ export default function Sidebar() {
 
         if (token && token.startsWith("google-token-")) {
           try {
-            const response = await fetch("http://localhost:4000/api/auth/profile", {
+            const response = await fetch(`${API_URL}/auth/profile`, {
               headers: {
                 Authorization: `Bearer ${token}`,
               },

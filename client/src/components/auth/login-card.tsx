@@ -6,7 +6,9 @@ import { useRouter } from "next/navigation";
 export default function LoginCard() {
   const router = useRouter();
   // const searchParams = useSearchParams();
-
+  const API_URL =
+  process.env.NEXT_PUBLIC_API_URL ||
+  "http://localhost:4000/api";
   useEffect(() => {
     const token = new URLSearchParams(
       window.location.search,
@@ -21,7 +23,7 @@ export default function LoginCard() {
       localStorage.setItem("authToken", token);
 
       // Fetch the true profile details from the backend endpoint using the token
-      fetch("http://localhost:4000/api/auth/profile", {
+      fetch(`${API_URL}/auth/profile`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -86,9 +88,7 @@ if (!data.teamId) {
         });
     }
   }, [ router]);
-const API_URL =
-  process.env.NEXT_PUBLIC_API_URL ||
-  "http://localhost:4000/api";
+
 
 const handleGuestLogin = async () => {
   try {
@@ -191,8 +191,7 @@ localStorage.removeItem("userEmail");
 localStorage.removeItem("userName");
 localStorage.removeItem("userAvatar");
 
-  window.location.href =
-    "http://localhost:4000/api/auth/google";
+  window.location.href = `${API_URL}/auth/google`;
 };
 
   return (

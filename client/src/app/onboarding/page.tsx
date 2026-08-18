@@ -12,6 +12,8 @@ export default function OnboardingPage() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  const API_URL =
+  process.env.NEXT_PUBLIC_API_URL || "http://localhost:4000/api";
  const handleCreateTeam = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!teamName.trim()) return;
@@ -22,7 +24,7 @@ export default function OnboardingPage() {
     try {
       const token = localStorage.getItem("authToken");
       // 👈 Updated URL to match your NestJS Controller (@Controller("auth") + @Post("team/create"))
-      const response = await fetch("http://localhost:4000/api/auth/team/create", {
+      const response = await fetch(`${API_URL}/auth/team/create`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -62,7 +64,7 @@ export default function OnboardingPage() {
     try {
       const token = localStorage.getItem("authToken");
       // 👈 Updated URL to match your NestJS Controller (@Controller("auth") + @Post("team/join"))
-      const response = await fetch("http://localhost:4000/api/auth/team/join", {
+      const response = await fetch(`${API_URL}/auth/team/join`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
