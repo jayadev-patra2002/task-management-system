@@ -151,29 +151,33 @@ private getUserIdFromReq(req: Request): string {
   ) {
     const user = req.user as any;
 
-    if (!user) {
-      return res.redirect(
-        "http://localhost:3000/?error=auth_failed",
-      );
-    }
+ const frontendUrl =
+  process.env.FRONTEND_URL ||
+  "http://localhost:3000";
 
-    const payload = JSON.stringify({
-      userId: user.id,
-      email: user.email,
-      picture: user.avatar || user.picture,
-      name: user.name,
-      teamId: user.teamId || null,
-    });
+if (!user) {
+  return res.redirect(
+    `${frontendUrl}/?error=auth_failed`,
+  );
+}
 
-    const token =
-      "google-token-" +
-      Buffer.from(payload).toString("base64");
+const payload = JSON.stringify({
+  userId: user.id,
+  email: user.email,
+  picture: user.avatar || user.picture,
+  name: user.name,
+  teamId: user.teamId || null,
+});
 
-    return res.redirect(
-      `http://localhost:3000/?token=${encodeURIComponent(
-        token,
-      )}`,
-    );
+const token =
+  "google-token-" +
+  Buffer.from(payload).toString("base64");
+
+return res.redirect(
+  `${frontendUrl}/?token=${encodeURIComponent(
+    token,
+  )}`,
+);
   }
 
   // =====================================================
