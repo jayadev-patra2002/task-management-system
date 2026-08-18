@@ -7,6 +7,7 @@ import { TasksModule } from "./tasks/tasks.module";
 import { TeamsModule } from "./teams/teams.module";
 import { RealtimeModule } from "./realtime/realtime.module";
 import { ProjectsModule } from "./projects/projects.module";
+import { AppController } from "./app.controller";
 
 @Module({
   imports: [
@@ -21,7 +22,7 @@ import { ProjectsModule } from "./projects/projects.module";
     RealtimeModule,
     ProjectsModule,
   ],
-  controllers: [],
+  controllers: [AppController],
   providers: [],
 })
 export class AppModule {}
