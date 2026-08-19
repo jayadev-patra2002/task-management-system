@@ -5422,17 +5422,33 @@ useEffect(() => {
     </div>
   )}
 </div>
-                {/* LABELS */}
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-400">
-                    Labels
-                  </span>
+        {/* LABELS */}
+<div className="flex items-start justify-between gap-4">
+  <span className="w-20 shrink-0 pt-1 text-gray-400">
+    Labels
+  </span>
 
-                  <span>
-                    {task.tags?.[0] ||
-                      "-"}
-                  </span>
-                </div>
+  <div className="min-w-0 flex-1">
+    <div className="flex max-w-full flex-wrap justify-end gap-1.5 overflow-hidden">
+      {Array.isArray(task.tags) && task.tags.length > 0 ? (
+        task.tags.map((label) => (
+          <span
+            key={label}
+            className="inline-flex max-w-full min-w-0 items-center gap-1 rounded-full border border-gray-200 bg-gray-50/70 px-2.5 py-1 text-[11px] text-gray-600 dark:border-zinc-800 dark:bg-zinc-900 dark:text-gray-300"
+          >
+            <Tag className="h-2.5 w-2.5 shrink-0 text-gray-400" />
+
+            <span className="min-w-0 truncate">
+              {label}
+            </span>
+          </span>
+        ))
+      ) : (
+        <span>-</span>
+      )}
+    </div>
+  </div>
+</div>
 
                 {/* TEAMS */}
                 <div className="flex items-center justify-between">
