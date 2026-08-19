@@ -174,8 +174,15 @@ https://github.com/jayadev-patra2002/task-management-system
                          └──────────────────────┘
 
 
+
+
+```
+
+---
+
 ## 📂 Project Structure
 
+```text
 task-management-system/
 │
 ├── client/
@@ -208,3 +215,4 @@ task-management-system/
 │
 ├── .gitignore
 └── README.md
+```
