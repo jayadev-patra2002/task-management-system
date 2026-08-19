@@ -1,314 +1,210 @@
-\# Task Management System
+# Task Management System
+
+A full-stack task management application built with Next.js and NestJS.
+
+The application provides task management, project management, workspace collaboration, authentication, real-time updates, subtasks, resources, comments, labels, responsive layouts, and theme support.
+
+---
+
+## 🚀 Live Application
+
+**Frontend:**  
+https://task-management-system-omega-weld.vercel.app/
 
+**Backend API:**  
+https://task-management-api-4ekx.onrender.com/api/
 
+**GitHub Repository:**  
+https://github.com/jayadev-patra2002/task-management-system
+
+---
+
+## ✨ Features
+
+### 🔐 Authentication
 
-A full-stack task management application built as part of the frontend/backend engineering assessment.
+- Guest Login
+- Google OAuth authentication
+- User profile management
+- Authentication token handling
+- Production Google OAuth callback flow
+
+### 👥 Teams / Workspaces
 
+- Create a workspace
+- Join a workspace using an invite code
+- View workspace members
+- Leave a workspace
+- Workspace collaboration
+- Workspace information management
 
+### 📁 Projects
 
-The application provides task, project, team, collaboration, authentication, realtime updates, subtasks, resources, comments, and responsive UI functionality.
+- Create projects
+- Edit projects
+- Delete projects
+- View project details
+- Manage tasks inside projects
+- Project-based task organization
 
+### ✅ Tasks
 
+- Create tasks
+- Edit tasks
+- Delete tasks
+- Task status management
+- Priority management
+- Assignee management
+- Start dates
+- Due dates
+- Task locking
+- Task labels
+- Reporter information
+- Task activity / updates
+- Task details
+- Responsive task interface
 
-\---
+### ☑️ Subtasks
 
+- Create subtasks
+- Edit subtasks
+- Delete subtasks
+- Complete / incomplete subtasks
+- Subtask action menu
+- Dedicated scrolling when subtasks overflow
 
+### 💬 Comments & Collaboration
 
-\## 🚀 Live Application
+- Task comments
+- Comment replies
+- Activity / updates section
+- Real-time task collaboration
+- Real-time updates using Socket.IO
 
+### 📎 Resources
 
+- Add task resources
+- Upload resources
+- Edit resources
+- Delete resources
+- Resource management inside tasks
 
-\*\*Frontend:\*\* Coming soon
+### 🎨 UI / UX
 
+- Responsive desktop layout
+- Responsive tablet layout
+- Responsive mobile layout
+- Theme switching
+- Persistent theme preference
+- Responsive sidebar navigation
+- Collapsible task details
+- Collapsible updates section
+- Responsive task details modal
+- Responsive project views
+- Responsive task views
+- Responsive subtasks section
+- Responsive label handling
 
+---
 
-\*\*Backend API:\*\* Coming soon
+## 🛠️ Tech Stack
 
+### Frontend
 
+- Next.js 16
+- React
+- TypeScript
+- Tailwind CSS
+- Zustand
+- Lucide React
+- Socket.IO Client
 
-> The live deployment URLs will be added here after deployment.
+### Backend
 
+- NestJS
+- TypeScript
+- Prisma ORM
+- Socket.IO
+- Passport
+- Google OAuth
 
+### Database
 
-\---
+- PostgreSQL
+- Supabase
 
+### Deployment
 
+- Vercel — Frontend
+- Render — Backend
+- Supabase — PostgreSQL Database
 
-\## ✨ Features
+---
 
-
-
-\### Authentication
-
-\- Guest login
-
-\- Google/Gmail authentication
-
-\- User profile management
-
-
-
-\### Teams
-
-\- Create a team/workspace
-
-\- Join a team using a share option
-
-\- View team members
-
-\- Team collaboration
-
-
-
-\### Projects
-
-\- Create projects
-
-\- Edit projects
-
-\- Delete projects
-
-\- Project details
-
-\- Project task management
-
-
-
-\### Tasks
-
-\- Create and edit tasks
-
-\- Task status
-
-\- Priority
-
-\- Assignee
-
-\- Due date
-
-\- Task locking
-
-\- Task activity/updates
-
-\- Task deletion
-
-\- Responsive task interface
-
-
-
-\### Subtasks
-
-\- Create subtasks
-
-\- Edit subtasks
-
-\- Delete subtasks
-
-\- Complete/incomplete subtasks
-
-\- Subtask action menu
-
-\- Dedicated scrolling when subtasks overflow
-
-
-
-\### Comments \& Collaboration
-
-\- Task comments
-
-\- Comment replies
-
-\- Activity/update section
-
-\- Realtime task collaboration
-
-
-
-\### Resources
-
-\- Add task resources
-
-\- Upload resources
-
-\- Edit resources
-
-\- Delete resources
-
-
-
-\### UI \& UX
-
-\- Responsive desktop, tablet and mobile layouts
-
-\- Theme support
-
-\- Collapsible task details and updates sections
-
-\- Responsive sidebar/toggle navigation
-
-\- Responsive task details modal
-
-\- Responsive project and task views
-
-
-
-\---
-
-
-
-\## 🛠️ Tech Stack
-
-
-
-\### Frontend
-
-
-
-\- Next.js
-
-\- React
-
-\- TypeScript
-
-\- Tailwind CSS
-
-
-
-\### Backend
-
-
-
-\- NestJS
-
-\- TypeScript
-
-\- Prisma ORM
-
-\- Socket.IO
-
-
-
-\### Database
-
-
-
-\- PostgreSQL
-
-\- Supabase
-
-
-
-\### Authentication
-
-
-
-\- Guest authentication
-
-\- Google authentication
-
-
-
-\---
-
-
-
-\## 🏗️ Project Structure
-
-
+## 🏗️ Application Architecture
 
 ```text
+                         ┌──────────────────────┐
+                         │       Browser        │
+                         └──────────┬───────────┘
+                                    │
+                                    │ HTTPS
+                                    ▼
+                         ┌──────────────────────┐
+                         │   Next.js Frontend   │
+                         │       Vercel         │
+                         └──────────┬───────────┘
+                                    │
+                         REST API / Socket.IO
+                                    │
+                                    ▼
+                         ┌──────────────────────┐
+                         │    NestJS Backend    │
+                         │       Render         │
+                         └──────────┬───────────┘
+                                    │
+                                    ▼
+                         ┌──────────────────────┐
+                         │     Prisma ORM       │
+                         └──────────┬───────────┘
+                                    │
+                                    ▼
+                         ┌──────────────────────┐
+                         │ PostgreSQL / Supabase│
+                         └──────────────────────┘
+
+
+## 📂 Project Structure
 
 task-management-system/
-
 │
-
 ├── client/
-
 │   ├── src/
-
 │   │   ├── app/
-
 │   │   ├── components/
-
+│   │   │   ├── task-dashboard/
+│   │   │   └── tasks/
 │   │   ├── lib/
-
 │   │   ├── store/
-
 │   │   └── types/
-
 │   ├── public/
-
-│   └── package.json
-
+│   ├── package.json
+│   └── next.config.ts
 │
-
 ├── server/
-
 │   ├── prisma/
-
 │   │   ├── schema.prisma
-
 │   │   └── migrations/
-
+│   │
 │   ├── src/
-
 │   │   ├── auth/
-
 │   │   ├── projects/
-
+│   │   ├── prisma/
 │   │   ├── realtime/
-
 │   │   ├── tasks/
-
-│   │   ├── teams/
-
-│   │   └── prisma/
-
+│   │   └── teams/
+│   │
 │   └── package.json
-
 │
-
 ├── .gitignore
-
 └── README.md
-
-
-
-
-
-```markdown
-
-\## 🚀 Deployment Architecture
-
-
-
-```text
-
-Browser
-
-&#x20;  │
-
-&#x20;  ▼
-
-Next.js Frontend
-
-&#x20;  │
-
-&#x20;  │ HTTPS / REST API / Socket.IO
-
-&#x20;  ▼
-
-NestJS Backend
-
-&#x20;  │
-
-&#x20;  ▼
-
-Prisma ORM
-
-&#x20;  │
-
-&#x20;  ▼
-
-Supabase PostgreSQL
-
